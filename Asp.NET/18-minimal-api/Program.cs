@@ -1,16 +1,38 @@
-using _18_minimal_api.Model;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer(); // Required for Minimal APIs
+// var key = "super_key_123456789";
+var key = "this_is_a_super_secret_key_123456";
 
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = false,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(key))
+        };
+    });
+
+builder.Services.AddAuthorization();
+builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseAuthentication();
+app.UseAuthorization();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -18,71 +40,79 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+var items = new List<string>();
 
-var items = new List<Todo>();
+app.MapGet("/", () => "Hello World!");
 
-app.MapGet("/todo", () => {
-    return Results.Ok(items);
-});
+app.MapGet("/secure", () => "Authorized!")
+   .RequireAuthorization();
+   
+   app.MapPost("/login", (string username,string password) =>
+   {
+       // string username = "admin";
+       // string password = "admin";
+       if (username != "admin" || password != "admin")
+           return Results.Unauthorized();
 
-app.MapGet("/todo/{id:int}", (int id) => {
-    if (id < 0) {
+        var token = new JwtSecurityTokenHandler().WriteToken(
+            new JwtSecurityToken(
+                claims: new[] { new Claim(ClaimTypes.Name, username) },
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                    SecurityAlgorithms.HmacSha256)
+        ));
+        // var token = new JwtSecurityTokenHandler()
+        //     .WriteToken(new JwtSecurityToken());
+
+       return Results.Ok(new { token });
+   });
+app.MapGet("/todo", () => Results.Ok(items));
+
+app.MapGet("/todo/{id:int}", (int id) =>
+{
+    if (id < 0)
         return Results.BadRequest("Invalid ID");
-    } else if (items.Count <= id) {
+
+    if (id >= items.Count)
         return Results.NotFound("Item Not Found");
-    }
+
     return Results.Ok(items[id]);
 });
 
-app.MapPut("/todo/{id:int}",(int id,string data) => {
-    if (data is null )
-    {
-        return Results.BadRequest();
-    }
+app.MapPost("/todo", (string data) =>
+{
+    if (string.IsNullOrWhiteSpace(data))
+        return Results.BadRequest("Invalid item");
+
     data = data.ToLower().Trim();
 
-    if (data.Length == 0) return Results.BadRequest("Invalid item");
-    
-    if (id < 0) {
-        return Results.BadRequest("Invalid ID");
-    } else if (items.Count <= id) {
-        return Results.NotFound("Item Not Found");
-    }
-    items[id] = data;
-    return Results.NoContent();
+    if (items.Contains(data))
+        return Results.BadRequest("Item already exists");
 
-});
-app.MapPost("/todo", (string data) => {
-    if (data is null )
-    {
-        return Results.BadRequest();
-    }
-    data = data.ToLower().Trim();
-    if(data.Length == 0)  return Results.BadRequest("Invalid item");
-
-    bool found = items.Contains(data);
-    if(found){
-        return Results.BadRequest();
-    }
     items.Add(data);
-    return Results.Created($"/todo/{items.Count -1}",data);
+    return Results.Created($"/todo/{items.Count - 1}", data);
 });
 
-app.MapDelete("/todo", (string data) => {
-    if (data is null )
-    {
-        return Results.BadRequest();
-    }
-    data = data.ToLower().Trim();
-    if(data.Length == 0)  return Results.BadRequest("Invalid item");
+app.MapPut("/todo/{id:int}", (int id, string data) =>
+{
+    if (string.IsNullOrWhiteSpace(data))
+        return Results.BadRequest("Invalid item");
 
-    bool found = items.Contains(data);
-    if(!found){
+    if (id < 0 || id >= items.Count)
         return Results.NotFound("Item Not Found");
-    }
-    items.Remove(data);
+
+    items[id] = data.ToLower().Trim();
+    return Results.NoContent();
+});
+
+app.MapDelete("/todo/{id:int}", (int id) =>
+{
+    if (id < 0 || id >= items.Count)
+        return Results.NotFound("Item Not Found");
+
+    items.RemoveAt(id);
     return Results.NoContent();
 });
 
 app.Run();
-

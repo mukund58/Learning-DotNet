@@ -1,6 +1,6 @@
-# Backend Engineer Roadmap
+# Backend Engineer Roadmap (Placement-Optimized)
 
-> C# → ASP.NET Core → HTTP Mastery → EF Core → Security → System Design → Distributed Systems
+> C# → ASP.NET Core → HTTP → EF Core → Security → DB Mastery → API Protection → System Design
 
 ---
 
@@ -35,6 +35,9 @@
 - [ ] Idempotency
 - [ ] REST principles
 - [ ] Content negotiation
+- [ ] Input validation
+- [ ] Model validation attributes
+- [ ] FluentValidation (optional)
 
 ---
 
@@ -47,38 +50,78 @@
 - [x] Scaffolding
 - [ ] CRUD (full mastery)
 - [ ] Tracking vs No-Tracking
+- [ ] AsNoTracking
+- [ ] Tracking vs Detached entities
 - [ ] One-to-Many / Many-to-Many relationships
 - [ ] Include / Eager loading
+- [ ] `FirstOrDefaultAsync` vs `SingleOrDefaultAsync`
+- [ ] Pagination (Skip / Take)
+- [ ] Filtering & Sorting
+- [ ] Projection (`Select`)
+- [ ] Performance pitfalls (N+1)
+- [ ] Concurrency handling (RowVersion)
 - [ ] Transactions
 
 ---
 
 ## Phase 5 — Security & Authentication
 
-- [x] JWT
-- [ ] Session vs JWT
-- [ ] OAuth2
-- [ ] OpenID Connect (OIDC)
 - [ ] Password Hashing (BCrypt, PBKDF2)
 - [ ] Salting
-- [ ] Encryption standards (AES, RSA)
-- [ ] HTTPS & TLS basics
+- [x] JWT
+- [ ] Refresh tokens
+- [ ] Token expiration handling
+- [ ] Session vs JWT
+- [ ] Claims-based authorization
 - [ ] Roles (Student, Instructor, Admin)
 - [ ] `[Authorize]` on endpoints
+- [ ] HTTPS & TLS basics
+- [ ] OAuth2
+- [ ] OpenID Connect (OIDC)
+- [ ] Encryption standards (AES, RSA)
 
 ---
 
-## Phase 6 — API Protection & Resilience
+## Phase 6 — Database & Query Mastery
+
+- [ ] SQL vs NoSQL
+- [ ] ACID properties
+- [ ] Transactions (deep)
+- [ ] Indexing strategies (B-Tree, Hash)
+- [ ] Clustered vs Non-clustered indexes
+- [ ] Composite indexes
+- [ ] Query optimization
+- [ ] Execution plans
+- [ ] Normalization vs Denormalization
+
+---
+
+## Phase 7 — API Protection & Resilience
 
 - [ ] Rate Limiting
-- [ ] DDoS Protection basics
-- [ ] Input validation
 - [ ] Global exception handling
 - [ ] CORS
+- [ ] API versioning
+- [ ] Structured logging
+- [ ] Health checks
+- [ ] DDoS Protection basics
 
 ---
 
-## Phase 7 — Real-Time & Communication
+## Phase 8 — System Design & Architecture
+
+- [ ] Layered architecture
+- [ ] Clean Architecture
+- [ ] Caching strategies
+- [ ] Redis
+- [ ] Horizontal vs Vertical scaling
+- [ ] Load Balancing
+- [ ] CDN basics
+- [ ] Message Brokers
+
+---
+
+## Phase 9 — Real-Time & Communication
 
 - [ ] WebSockets
 - [ ] SignalR
@@ -87,39 +130,14 @@
 
 ---
 
-## Phase 8 — Database & Query Mastery
-
-- [ ] SQL vs NoSQL
-- [ ] ACID properties
-- [ ] Transactions (deep)
-- [ ] Indexing strategies (B-Tree, Hash)
-- [ ] Query optimization
-- [ ] Execution plans
-- [ ] Normalization vs Denormalization
-
----
-
-## Phase 9 — System Design & Architecture
-
-- [ ] Layered architecture
-- [ ] Clean Architecture
-- [ ] Load Balancing
-- [ ] Horizontal vs Vertical scaling
-- [ ] Caching strategies
-- [ ] Redis
-- [ ] Memcached
-- [ ] CDN basics
-- [ ] Message Brokers
-
----
-
-## Phase 10 — Distributed Systems & Messaging
+## Phase 10 — Distributed Systems & Messaging 🔒 Post-Placement
 
 - [ ] Kafka
 - [ ] RabbitMQ
 - [ ] Event-driven systems
 - [ ] Async processing
 - [ ] Saga pattern
+- [ ] Memcached
 
 ---
 
@@ -153,10 +171,10 @@
 | 3 | HTTP & API Semantics | 🟡 |
 | 4 | EF Core & Data Layer | 🟡 |
 | 5 | Security & Auth | 🔲 |
-| 6 | API Protection & Resilience | 🔲 |
-| 7 | Real-Time & Communication | 🔲 |
-| 8 | Database & Query Mastery | 🔲 |
-| 9 | System Design & Architecture | 🔲 |
-| 10 | Distributed Systems & Messaging | 🔲 |
+| 6 | Database & Query Mastery | 🔲 |
+| 7 | API Protection & Resilience | 🔲 |
+| 8 | System Design & Architecture | 🔲 |
+| 9 | Real-Time & Communication | 🔲 |
+| 10 | Distributed Systems (Post-Placement) | 🔒 |
 | — | Ed-Tech Project | 🔲 |
 | — | Deploy | 🔲 |

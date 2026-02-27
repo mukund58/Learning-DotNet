@@ -3,7 +3,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using _19_jwt_Auth.Models;
 
 
 namespace AuthenticationDemo
@@ -49,7 +48,7 @@ namespace AuthenticationDemo
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+''
             // ---------------------
             // SIGNUP / LOGIN (demo)
             // ---------------------.

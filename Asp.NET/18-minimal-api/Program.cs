@@ -3,12 +3,18 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using DotNetEnv;
+using _18_minimal_api.Models;
+using _18_minimal_api.Auth;
+
+Env.Load(); // Load environment variables from .env file
+var key = Environment.GetEnvironmentVariable("KEY");
+// var key = "super_key_123456789";";
+// var key = "this_is_a_super_secret_key_123456";
+
 
 var builder = WebApplication.CreateBuilder(args);
-
-// var key = "super_key_123456789";
-var key = "this_is_a_super_secret_key_123456";
-
+builder.Services.AddSingleton(new TokenService(key));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
     {
@@ -16,7 +22,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         {
             ValidateIssuer = false,
             ValidateAudience = false,
-            ValidateLifetime = false,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
         };
@@ -26,8 +32,12 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+var users = new List<User>();
+var todos = new List<TodoItem>();
 
+
+
+var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -39,78 +49,79 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var items = new List<string>();
 
 app.MapGet("/", () => "Hello World!");
 
 app.MapGet("/secure", () => "Authorized!")
    .RequireAuthorization();
-   
-   app.MapPost("/login", (string username,string password) =>
+
+   app.MapPost("/signup", (string username, string password, TokenService tokenService) =>
    {
-       // string username = "admin";
-       // string password = "admin";
        if (username != "admin" || password != "admin")
            return Results.Unauthorized();
 
-        var token = new JwtSecurityTokenHandler().WriteToken(
-            new JwtSecurityToken(
-                claims: new[] { new Claim(ClaimTypes.Name, username) },
-                expires: DateTime.UtcNow.AddMinutes(30),
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                    SecurityAlgorithms.HmacSha256)
-        ));
-        // var token = new JwtSecurityTokenHandler()
-        //     .WriteToken(new JwtSecurityToken());
+       var token = tokenService.Generate(username);
+
+       users.Add(new User(username, password));
 
        return Results.Ok(new { token });
    });
-app.MapGet("/todo", () => Results.Ok(items));
+
+   app.MapPost("/login", (string username, string password, TokenService tokenService) =>
+   {
+       if (username != "admin" || password != "admin")
+           return Results.Unauthorized();
+
+       var token = tokenService.Generate(username);
+
+       return Results.Ok(new { token });
+   });
+
+app.MapGet("/todo", () => Results.Ok(todos));
 
 app.MapGet("/todo/{id:int}", (int id) =>
 {
     if (id < 0)
         return Results.BadRequest("Invalid ID");
 
-    if (id >= items.Count)
+    if (id >= todos.Count)
         return Results.NotFound("Item Not Found");
 
-    return Results.Ok(items[id]);
+        var todo = todos[id];
+        return Results.Ok(todo);
 });
 
-app.MapPost("/todo", (string data) =>
+app.MapPost("/todo", (string data, TokenService tokenService) =>
 {
     if (string.IsNullOrWhiteSpace(data))
         return Results.BadRequest("Invalid item");
 
-    data = data.ToLower().Trim();
-
-    if (items.Contains(data))
+    if (todos.Contains(data))
         return Results.BadRequest("Item already exists");
 
-    items.Add(data);
-    return Results.Created($"/todo/{items.Count - 1}", data);
+    var todo = new TodoItem(Guid.NewGuid().ToString(), data);
+    todos.Add(todo);
+    return Results.Created($"/todo/{todos.Count - 1}", todo);
 });
 
-app.MapPut("/todo/{id:int}", (int id, string data) =>
+app.MapPut("/todo/{id:int}", (int id, string data, TokenService tokenService) =>
 {
     if (string.IsNullOrWhiteSpace(data))
         return Results.BadRequest("Invalid item");
 
-    if (id < 0 || id >= items.Count)
+    if (id < 0 || id >= todos.Count)
         return Results.NotFound("Item Not Found");
 
-    items[id] = data.ToLower().Trim();
+    todos[id] = new TodoItem(todos[id].Id, data);
     return Results.NoContent();
 });
 
 app.MapDelete("/todo/{id:int}", (int id) =>
 {
-    if (id < 0 || id >= items.Count)
+    if (id < 0 || id >= todos.Count)
         return Results.NotFound("Item Not Found");
 
-    items.RemoveAt(id);
+    todos.RemoveAt(id);
     return Results.NoContent();
 });
 

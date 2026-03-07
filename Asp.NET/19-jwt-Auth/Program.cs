@@ -48,7 +48,7 @@ namespace AuthenticationDemo
 
             app.UseAuthentication();
             app.UseAuthorization();
-''
+
             // ---------------------
             // SIGNUP / LOGIN (demo)
             // ---------------------.

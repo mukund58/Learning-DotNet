@@ -1,6 +1,11 @@
-# Backend Engineer Roadmap (Placement-Optimized)
+
+
+
+# Backend + QA Engineer Roadmap (Placement-Optimized)
 
 > C# → ASP.NET Core → HTTP → EF Core → Security → DB Mastery → API Protection → System Design
+> 
+> 🎯 Dual-track: Backend Developer + QA (API Testing) roles
 
 ---
 
@@ -35,6 +40,8 @@
 - [ ] Idempotency
 - [ ] REST principles
 - [ ] Content negotiation
+- [ ] API Versioning
+- [ ] API Sunset (deprecation strategy)
 - [ ] Input validation
 - [ ] Model validation attributes
 - [ ] FluentValidation (optional)
@@ -48,8 +55,8 @@
 - [x] LINQ Queries
 - [x] DTOs vs Entities
 - [x] Scaffolding
-- [ ] CRUD (full mastery)
-- [ ] Tracking vs No-Tracking
+- [X] CRUD (full mastery)
+- [X] Tracking vs No-Tracking
 - [ ] AsNoTracking
 - [ ] Tracking vs Detached entities
 - [ ] One-to-Many / Many-to-Many relationships
@@ -58,6 +65,8 @@
 - [ ] Pagination (Skip / Take)
 - [ ] Filtering & Sorting
 - [ ] Projection (`Select`)
+- [ ] Soft Delete
+- [ ] Data Seeding
 - [ ] Performance pitfalls (N+1)
 - [ ] Concurrency handling (RowVersion)
 - [ ] Transactions
@@ -82,6 +91,49 @@
 
 ---
 
+## Phase 5.5 — QA Fundamentals (Placement Boost) 🎯
+
+> You already have a backend advantage — now add core QA knowledge to double your job options.
+
+### QA Core Concepts (Must-Know for Interviews)
+
+- [ ] What is a test case (structure: steps, expected, actual)
+- [ ] Bug lifecycle (New → Open → Fixed → Verified → Closed)
+- [ ] Severity vs Priority
+- [ ] Smoke testing vs Sanity testing
+- [ ] Regression testing
+- [ ] Positive vs Negative testing
+- [ ] Boundary value analysis
+- [ ] Equivalence partitioning
+- [ ] Bug reporting best practices
+
+### API Testing (⭐ Best Match for Your Skills)
+
+- [ ] Postman — manual API testing
+- [ ] Postman collections & environments
+- [ ] Testing endpoints (auth failures, invalid payloads, edge cases)
+- [ ] Swagger UI for exploratory testing
+- [ ] Newman CLI (run Postman collections from terminal)
+- [ ] API contract validation
+- [ ] Testing JWT auth flows (expired token, missing token, wrong role)
+- [ ] Testing status code correctness per endpoint
+
+### SQL Testing
+
+- [ ] Write SELECT queries to verify data
+- [ ] Validate CRUD operations at DB level
+- [ ] Check data integrity after API calls
+- [ ] Basic joins for test data verification
+
+### Automation QA (Strong Future Path) 🚀
+
+- [ ] Playwright basics (browser automation)
+- [ ] Selenium basics (optional)
+- [ ] REST API automation with C# (HttpClient / RestSharp)
+- [ ] CI pipeline basics for test runs
+
+---
+
 ## Phase 6 — Database & Query Mastery
 
 - [ ] SQL vs NoSQL
@@ -102,8 +154,12 @@
 - [ ] Global exception handling
 - [ ] CORS
 - [ ] API versioning
-- [ ] Structured logging
+- [ ] API Sunset headers
+- [ ] Structured logging (Serilog / built-in)
+- [ ] Logging levels & best practices
 - [ ] Health checks
+- [ ] Caching (In-Memory, Distributed)
+- [ ] Response Caching
 - [ ] DDoS Protection basics
 
 ---
@@ -146,9 +202,12 @@
 - [ ] Data modeling (User, Course, Lesson, Enrollment, Quiz)
 - [ ] CRUD APIs
 - [ ] Validation & error handling
-- [ ] File uploads
+- [ ] File uploads & downloads
 - [ ] Pagination & filtering
+- [ ] Soft delete implementation
 - [ ] Response consistency
+- [ ] Postman collection for all endpoints (QA artifact)
+- [ ] Test cases document for key flows (QA artifact)
 
 ---
 
@@ -162,6 +221,8 @@
 
 ---
 
+
+
 ## Progress
 
 | Phase | Topic | Status |
@@ -171,6 +232,7 @@
 | 3 | HTTP & API Semantics | 🟡 |
 | 4 | EF Core & Data Layer | 🟡 |
 | 5 | Security & Auth | 🔲 |
+| 5.5 | QA Fundamentals (Placement Boost) | 🔲 |
 | 6 | Database & Query Mastery | 🔲 |
 | 7 | API Protection & Resilience | 🔲 |
 | 8 | System Design & Architecture | 🔲 |

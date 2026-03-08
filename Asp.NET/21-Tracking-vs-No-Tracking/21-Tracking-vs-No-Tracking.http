@@ -1,0 +1,6 @@
+@_21_Tracking_vs_No_Tracking_HostAddress = http://localhost:5162
+
+GET {{_21_Tracking_vs_No_Tracking_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

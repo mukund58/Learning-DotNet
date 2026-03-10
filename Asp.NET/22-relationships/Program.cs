@@ -13,21 +13,71 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.MapGet("/", () => "Api Is Working!!");
+var EmployeeGroup = app.MapGroup("/api/employee");
+var DepartmentGroup = app.MapGroup("/api/department");
 
-app.MapGet("/employes", async (AppDbContext db) =>
+
+
+
+EmployeeGroup.MapPost("/", async (Employee employee, AppDbContext db) =>
+{
+    await db.Employees.AddAsync(employee);
+    await db.SaveChangesAsync();
+    return Results.Created();
+});
+
+
+EmployeeGroup.MapGet("/", async (AppDbContext db) =>
 {
     var employees = await db.Employees.ToListAsync();
     return Results.Ok(employees);
 });
 
-app.MapGet("/deparment", async (AppDbContext db) =>
+// EmployeeGroup.MapGet("/department", async (AppDbContext db) =>
+// {
+//     var employees = await db.Employees.Include(d => d.Department).ToListAsync();
+//     return Results.Ok(employees);
+// });
+EmployeeGroup.MapGet("/department", async (AppDbContext db) =>
 {
-    var deparment = await db.Departments.ToListAsync();
-    return Results.Ok(deparment);
+    return await db.Employees
+        .Include(e => e.Department)
+        .Select(e => new
+        {
+            e.Id,
+            e.Name,
+            DepartmentName = e.Department.DepartmentName // Only pull what you need
+        })
+        .ToListAsync();
+});
+
+DepartmentGroup.MapGet("/", async (AppDbContext db) =>
+{
+    var departments = await db.Departments.ToListAsync();
+    return Results.Ok(departments);
+});
+
+DepartmentGroup.MapGet("/employee", async (AppDbContext db) =>
+{
+    return await db.Departments.Include(e => e.Employees).Select(e => new
+    {
+        e.DepartmentId,
+        e.DepartmentName
+    })
+       .ToListAsync();
+});
+
+DepartmentGroup.MapPost("/", async (Department department, AppDbContext db) =>
+{
+    // Clear nested employees to avoid deserialization/tracking issues
+    // Employees should be associated via their DepartmentId property instead
+    await db.Departments.AddAsync(department);
+    await db.SaveChangesAsync();
+    return Results.Created();
 });
 
 app.UseHttpsRedirection();
 
 
 app.Run();
-

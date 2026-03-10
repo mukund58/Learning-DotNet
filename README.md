@@ -55,11 +55,11 @@
 - [x] LINQ Queries
 - [x] DTOs vs Entities
 - [x] Scaffolding
-- [X] CRUD (full mastery)
-- [X] Tracking vs No-Tracking
-- [ ] AsNoTracking
-- [ ] Tracking vs Detached entities
-- [ ] One-to-Many / Many-to-Many relationships
+- [x] CRUD (full mastery)
+- [x] Tracking vs No-Tracking
+- [x] AsNoTracking
+- [x] Tracking vs Detached entities
+- [x] One-to-Many / Many-to-Many relationships
 - [ ] Include / Eager loading
 - [ ] `FirstOrDefaultAsync` vs `SingleOrDefaultAsync`
 - [ ] Pagination (Skip / Take)

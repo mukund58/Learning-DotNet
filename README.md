@@ -60,7 +60,10 @@
 - [x] AsNoTracking
 - [x] Tracking vs Detached entities
 - [x] One-to-Many / Many-to-Many relationships
-- [ ] Include / Eager loading
+- [x] Include / Eager loading
+- [x] nested projection
+- [x] cycle avoidance
+- [x] join translation
 - [ ] `FirstOrDefaultAsync` vs `SingleOrDefaultAsync`
 - [ ] Pagination (Skip / Take)
 - [ ] Filtering & Sorting

@@ -12,4 +12,5 @@ public class Employee
     // Using 'null!' tells the compiler EF will handle this, 
     // or use 'Department?' if the department is optional.
     public Department Department { get; set; } = null!;
+    public EmployeeAddress? EmployeeAddress { get; set; } 
 }

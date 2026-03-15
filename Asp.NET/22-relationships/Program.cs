@@ -6,6 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source = Employee.db"));
+// builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+// {
+//     options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+// });
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -42,7 +46,6 @@ EmployeeGroup.MapGet("/", async (AppDbContext db) =>
 EmployeeGroup.MapGet("/department", async (AppDbContext db) =>
 {
     return await db.Employees
-        .Include(e => e.Department)
         .Select(e => new
         {
             e.Id,
@@ -66,6 +69,19 @@ DepartmentGroup.MapGet("/employee", async (AppDbContext db) =>
         e.DepartmentName
     })
        .ToListAsync();
+});
+DepartmentGroup.MapGet("/employeeAdress", async (AppDbContext db) =>
+{
+    return await db.Departments
+        .Select(d => new
+        {
+            d.DepartmentName,
+            EmployeeName = d.Employees.Select(e => new {
+                e.Name,
+                Address = e.EmployeeAddress != null ? e.EmployeeAddress.Address : "Address Not Found"
+            }),
+        }).ToListAsync();
+
 });
 
 DepartmentGroup.MapPost("/", async (Department department, AppDbContext db) =>

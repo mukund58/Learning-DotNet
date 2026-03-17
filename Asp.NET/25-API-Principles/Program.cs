@@ -23,17 +23,54 @@ if (app.Environment.IsDevelopment())
 }
 
 var studentGroup = app.MapGroup("/api/students");
+var v1Group = app.MapGroup("/api/v1/students");
+var v2Group = app.MapGroup("/api/v2/students");
 
-studentGroup.MapGet("", async (AppDbContext context) =>
-{
-    return await context.Students.ToListAsync();
-});
-studentGroup.MapGet("{id}", async (int id, AppDbContext context) =>
+// version 1
+v1Group.MapGet("/{id}", async (int id, AppDbContext context,HttpContext httpContext) =>
 {
     var student = await context.Students.FindAsync(id);
     if (student is null) return Results.NotFound("Student Id Not Found");
-    return Results.Ok(student);
+
+    var v1StudentDto = new V1StudentDto
+    {
+        Id = student.Id,
+        Name = student.Name,
+        Department = student.Department
+    };
+    
+    httpContext.Response.Headers.Append("Deprecation", "True");
+    httpContext.Response.Headers.Append("Sunset", "Tue, 17 Mar 2026 18:00:00 GMT");
+    httpContext.Response.Headers.Append("Link", "</api/v2/students/>; rel=\"successor-version\"");
+    return Results.Ok(v1StudentDto);
 });
+
+// version 2
+v2Group.MapGet("/{id}", async(int id, AppDbContext context) =>
+{
+    var student = await context.Students.FindAsync(id);
+    if (student is null) return Results.NotFound("Student Id Not Found");
+
+    var v2StudentDto = new V2StudentDto
+    {
+        Id = student.Id.ToString(),
+        Name = student.Name,
+        Department = student.Department
+    };
+    
+    return Results.Ok(v2StudentDto);
+});
+
+// studentGroup.MapGet("", async (AppDbContext context) =>
+// {
+//     return await context.Students.ToListAsync();
+// });
+// studentGroup.MapGet("{id}", async (int id, AppDbContext context) =>
+// {
+//     var student = await context.Students.FindAsync(id);
+//     if (student is null) return Results.NotFound("Student Id Not Found");
+//     return Results.Ok(student);
+// });
 
 studentGroup.MapGet("{id}/format", async (
     int id,

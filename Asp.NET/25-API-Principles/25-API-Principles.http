@@ -1,0 +1,6 @@
+@_25_API_Principles_HostAddress = http://localhost:5049
+
+GET {{_25_API_Principles_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

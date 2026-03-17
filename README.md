@@ -37,9 +37,9 @@
 - [x] HTTP Methods (GET, POST, PUT, DELETE, PATCH)
 - [x] Routing & HTTP Verbs
 - [x] Status Codes (200, 201, 204, 400, 401, 403, 404, 409, 500)
-- [ ] Idempotency
-- [ ] REST principles
-- [ ] Content negotiation
+- [x] Idempotency
+- [x] REST principles
+- [x] Content negotiation
 - [ ] API Versioning
 - [ ] API Sunset (deprecation strategy)
 - [ ] Input validation

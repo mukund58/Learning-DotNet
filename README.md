@@ -40,8 +40,8 @@
 - [x] Idempotency
 - [x] REST principles
 - [x] Content negotiation
-- [ ] API Versioning
-- [ ] API Sunset (deprecation strategy)
+- [x] API Versioning
+- [x] API Sunset (deprecation strategy)
 - [ ] Input validation
 - [ ] Model validation attributes
 - [ ] FluentValidation (optional)

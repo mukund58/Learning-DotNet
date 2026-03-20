@@ -3,6 +3,7 @@ using _25_API_Principles.Models;
 using _25_API_Principles.Dto;
 using System.Data;
 using System.Xml.Serialization;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddControllers()
                 .AddXmlSerializerFormatters();
+builder.Services.AddScoped<IValidator<CreateStudentDto>, CreateStudentValidator>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -114,15 +116,34 @@ studentGroup.MapDelete("{id}", async (int id, AppDbContext context) =>
     return Results.NoContent();
 });
 
-studentGroup.MapPost("", async (CreateStudentDto studentDto, AppDbContext context) =>
+studentGroup.MapPost("", async (
+    CreateStudentDto studentDto,
+    IValidator<CreateStudentDto> validator,
+    AppDbContext context) =>
 {
+    var result = await validator.ValidateAsync(studentDto);
+
+    if (!result.IsValid)
+    {
+        var errors = result.Errors
+            .GroupBy(x => x.PropertyName)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(x => x.ErrorMessage).ToArray()
+            );
+
+        return Results.ValidationProblem(errors);
+    }
+
     var student = new Student
     {
         Name = studentDto.Name,
         Department = studentDto.Department
     };
-    await context.AddAsync(student);
+
+    await context.Students.AddAsync(student);
     await context.SaveChangesAsync();
+
     return Results.Created($"/api/students/{student.Id}", student);
 });
 studentGroup.MapPut("{id}", async (int id, Student student, AppDbContext context) =>

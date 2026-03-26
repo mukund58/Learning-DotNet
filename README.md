@@ -42,9 +42,9 @@
 - [x] Content negotiation
 - [x] API Versioning
 - [x] API Sunset (deprecation strategy)
-- [ ] Input validation
-- [ ] Model validation attributes
-- [ ] FluentValidation (optional)
+- [x] Input validation
+- [x] Model validation attributes
+- [x] FluentValidation (optional)
 
 ---
 

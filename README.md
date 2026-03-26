@@ -32,7 +32,7 @@
 
 ---
 
-## Phase 3 — HTTP & API Semantics
+## Phase 3 — HTTP & API Semantics ✅
 
 - [x] HTTP Methods (GET, POST, PUT, DELETE, PATCH)
 - [x] Routing & HTTP Verbs
@@ -232,7 +232,7 @@
 |-------|-------|--------|
 | 1 | C# Core | ✅ |
 | 2 | ASP.NET Core Basics | ✅ |
-| 3 | HTTP & API Semantics | 🟡 |
+| 3 | HTTP & API Semantics | ✅ |
 | 4 | EF Core & Data Layer | 🟡 |
 | 5 | Security & Auth | 🔲 |
 | 5.5 | QA Fundamentals (Placement Boost) | 🔲 |

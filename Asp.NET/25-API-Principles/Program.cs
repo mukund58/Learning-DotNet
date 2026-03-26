@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using _25_API_Principles.Models;
 using _25_API_Principles.Dto;
+using _25_API_Principles.Validators;
 using System.Data;
 using System.Xml.Serialization;
 using FluentValidation;
@@ -148,6 +149,7 @@ studentGroup.MapPost("", async (
 });
 studentGroup.MapPut("{id}", async (int id, Student student, AppDbContext context) =>
 {
+    // input validation
     if (id != student.Id)
         return Results.BadRequest("Route id and body id mismatch");
 
